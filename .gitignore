@@ -1,2 +1,4 @@
 
 *.pyc
+populate_magics.sh
+magics.txt

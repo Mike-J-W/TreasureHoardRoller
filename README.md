@@ -101,3 +101,9 @@ mundanemappings.py are lists.  Right now, the lists only have
 1 element, the rarity or price category.  Other elements in these
 lists could be used to store item descriptions or other qualities.
 I have no current plans to add any other qualities to the lists.
+
+I may explore homebrewed coins.
+
+I'm open to other ideas as well.
+
+buymeacoff.ee/QBuD3fbJN
