@@ -6,35 +6,32 @@ I've tested and run this script with python 3.6.1.  It does not work
 with python 2.7.  I have no comment on other python 3 versions.
 
 # Usage
-usage: TreasureHoardRoller.py [-h] [-a TABLE_ONE] [-b TABLE_TWO] 
-                                   [-c TABLE_THREE] [-d TABLE_FOUR]
+    usage: TreasureHoardRoller.py [-h] [-a TABLE_ONE] [-b TABLE_TWO] 
+                                       [-c TABLE_THREE] [-d TABLE_FOUR]
 
-Roll on the 5e Treasure Hoard tables. Any combination of rolls is 
-allowed. The Total Value calculation uses the following values.
+    Roll on the 5e Treasure Hoard tables. Any combination of rolls is 
+    allowed. The Total Value calculation uses the following values.
+      common: 75gp
+      uncommon: 300gp
+      rare: 2750gp
+      very rare: 27500gp
+      legendary: 275000gp
 
-    common: 75gp
-    uncommon: 300gp
-    rare: 2750gp
-    very rare: 27500gp
-    legendary: 275000gp
-
-optional arguments:
-
-    -h, --help
+    optional arguments:
+      -h, --help
         show this help message and exit
-    -a TABLE_ONE, --table-one TABLE_ONE
+      -a TABLE_ONE, --table-one TABLE_ONE
         The number of rolls to make on the table for CR 0-4
-    -b TABLE_TWO, --table-two TABLE_TWO
+      -b TABLE_TWO, --table-two TABLE_TWO
         The number of rolls to make on the table for CR 5-10
-    -c TABLE_THREE, --table-three TABLE_THREE
+      -c TABLE_THREE, --table-three TABLE_THREE
         The number of rolls to make on the table for CR 11-16
-    -d TABLE_FOUR, --table-four TABLE_FOUR
+      -d TABLE_FOUR, --table-four TABLE_FOUR
         The number of rolls to make on the table for CR 17+
 
 # Sample Output
 
-$ python3 TreasureHoardRoller.py -a 2 -b 1
-
+    $ python3 TreasureHoardRoller.py -a 2 -b 1
     COINS:
       cp: 4100
       sp: 8700
