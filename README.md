@@ -67,7 +67,6 @@ with python 2.7.  I have no comment on other python 3 versions.
         1 Spell Scroll (4th Level)
 
     TOTAL VALUE:
-      cp: 1503100
       gp: 15031
 
 # Homebrew

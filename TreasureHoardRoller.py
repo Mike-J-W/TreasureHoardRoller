@@ -89,7 +89,6 @@ class TreasureHoard:
                 self.print_counts(count_dict)
         print()
         print("TOTAL VALUE:")
-        print("  cp: {}".format(self.get_total_cp_value()))
         print("  gp: {}".format(round(self.get_total_cp_value() / 100)))
         print()
 
