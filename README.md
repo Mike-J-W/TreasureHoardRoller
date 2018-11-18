@@ -12,11 +12,11 @@ usage: TreasureHoardRoller.py [-h] [-a TABLE_ONE] [-b TABLE_TWO]
 Roll on the 5e Treasure Hoard tables. Any combination of rolls is 
 allowed. The Total Value calculation uses the following values.
 
-    common: 7500gp
-    uncommon: 30000gp
-    rare: 275000gp
-    very rare: 2750000gp
-    legendary: 27500000gp
+    common: 75gp
+    uncommon: 300gp
+    rare: 2750gp
+    very rare: 27500gp
+    legendary: 275000gp
 
 optional arguments:
 
@@ -85,7 +85,7 @@ the probability of the other items in that interior list.
 Adding or removing tables is not yet supported.
 
 If you add an item to magicitems.py or mundaneitems.py, you must also
-add it to the corresponding ___mappings.py file and include the
+add it to the corresponding <>mappings.py file and include the
 expected qualities.  Right now, the only expected qualities are rarity
 for magic items and price category for mundane items.
 

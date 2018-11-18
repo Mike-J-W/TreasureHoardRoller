@@ -118,7 +118,8 @@ def get_mundanes(table_name, die_type, die_count):
     objects = []
     roll_count = roll_die(die_type, die_count)
     for r in range(roll_count):
-        objects += [roll_table(muni.tables[table_name])]
+        mundane_result = roll_table(muni.tables[table_name])
+        objects += [roll_table(mundane_result)]
     return (table_name, objects)
 
 
@@ -374,7 +375,7 @@ def roll_table_four(rolls, result):
 def main(arglist):
     """take arguments, 'roll' on the tables, print the full result"""
     values_list = []
-    [values_list.extend([k,v]) for k,v in magmap.cp_values.items()]
+    [values_list.extend([k,v//100]) for k,v in magmap.cp_values.items()]
     values_str = " {}: {}gp,".join([""]+["" for e in magmap.cp_values])[:-1]
     values_str = values_str.format(*values_list)
     parser = ArgumentParser(description="Roll on the 5e Treasure Hoard " \
