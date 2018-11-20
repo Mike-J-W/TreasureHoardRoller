@@ -78,19 +78,15 @@ it to an interior list.  The former will make all other top-level
 items slightly less likely to be rolled.  The latter will only affect 
 the probability of the other items in that interior list.
 
-Adding or removing tables is not yet supported.
-
 If you add an item to magicitems.py or mundaneitems.py, you must also
 add it to the corresponding <>mappings.py file and include the
 expected qualities.  Right now, the only expected qualities are rarity
 for magic items and price category for mundane items.
 
-# Further Work
+The hoard tables themselves can also be altered if you would like to
+change the odds at which gems, arts, magics, etc are dropped.
 
-I intend to move the treasure hoard table specifications to an 
-exterior file.  This will allow customizing the chances that each 
-mundane or magic item table will be used.  This will also allow the 
-addition or removal of such tables.
+# Further Work
 
 The values in the qualities dictionary in magicmappings.py and in 
 mundanemappings.py are lists.  Right now, the lists only have

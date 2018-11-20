@@ -1,3 +1,13 @@
+# A representation of the Treasure Hoard tables given in the
+# 5th edition Dungeon Master's Guide.
+#
+# Rolling process: randomly choose element of 'table_*' list
+#                  use first element to roll for mundane objects
+#                  use second element to roll for magic objects
+#
+# Feel free to change the lists but make sure any new tables
+# exist in mundaneitemspy and/or magicitems.py.
+
 table_one = [
 	[[], []],
 	[[], []],
