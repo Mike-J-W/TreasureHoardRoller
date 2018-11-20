@@ -2,6 +2,7 @@ import sys
 import random
 from argparse import ArgumentParser
 
+import hoardtables
 import magicitems as magi
 import mundaneitems as muni
 import magicmappings as magmap
@@ -132,243 +133,51 @@ def get_magics(table_name, die_type, die_count):
     return (table_name, objects)
 
 
+def roll_hoard_table(table_name, result):
+    hoard_table_row = roll_table(table_name)
+    mundane_info = hoard_table_row[0]
+    for mi in mundane_info:
+        mundane_objects = get_mundanes(*mi)
+        result.add_mundanes(mundane_objects)
+    magic_info = hoard_table_row[1]
+    for mi in magic_info:
+        magic_objects = get_magics(*mi)
+        result.add_magics(magic_objects)
+
+
 def roll_table_one(rolls, result):
     """'roll' on the hoard table for CR 0-4 and record the result"""
-    num_to_mundane = {}
-    for i in list(range(7,17)) \
-             + list(range(37,45)) \
-             + list(range(61,66)) \
-             + list(range(76,79)):
-        num_to_mundane[i] = ("gem_10gp", 6, 2)
-    for i in list(range(27,37)) \
-             + list(range(53,61)) \
-             + list(range(71,76)) \
-             + list(range(81,86)) \
-             + list(range(93,98)) \
-             + [100]:
-        num_to_mundane[i] = ("gem_50gp", 6, 2)
-    for i in list(range(17,27)) \
-             + list(range(45,53)) \
-             + list(range(66,71)) \
-             + [79,80] \
-             + list(range(86,93)) \
-             + [98,99]:
-        num_to_mundane[i] = ("art_25gp", 4, 2)
-
-    num_to_magic = {}
-    for i in list(range(37,61)):
-        num_to_magic[i] = ("magic_a", 6, 1)
-    for i in list(range(61,76)):
-        num_to_magic[i] = ("magic_b", 4, 1)
-    for i in list(range(76,86)):
-        num_to_magic[i] = ("magic_c", 4, 1)
-    for i in list(range(86,97)):
-        num_to_magic[i] = ("magic_f", 4, 1)
-    for i in [97,98,99,100]:
-        num_to_magic[i] = ("magic_g", 1, 1)
-
     for roll_index in range(rolls):
         result.cp += roll_die(6, 6) * 100
         result.sp += roll_die(6, 3) * 100
         result.gp += roll_die(6, 2) * 10
-
-        table_roll = roll_die(100, 1)
-
-        if table_roll > 6:
-            mundane_info = num_to_mundane[table_roll]
-            mundane_objects = get_mundanes(*mundane_info)
-            result.add_mundanes(mundane_objects)
-
-        if table_roll > 36:
-            magic_info = num_to_magic[table_roll]
-            magic_objects = get_magics(*magic_info)
-            result.add_magics(magic_objects)
+        roll_hoard_table(hoardtables.table_one, result)
 
 
 def roll_table_two(rolls, result):
     """'roll' on the hoard table for CR 5-10 and record the result"""
-    num_to_mundane = {}
-    for i in list(range(11,17)) \
-             + list(range(33,37)) \
-             + list(range(50,55)) \
-             + list(range(67,70)) \
-             + [77,78] \
-             + list(range(85,89)):
-        num_to_mundane[i] = ("gem_50gp", 6, 3)
-    for i in list(range(17,23)) \
-             + list(range(37,41)) \
-             + list(range(55,60)) \
-             + list(range(70,73)) \
-             + [79] \
-             + list(range(89,92)) \
-             + [95,96,99]:
-        num_to_mundane[i] = ("gem_100gp", 6, 3)
-    for i in list(range(5,11)) \
-             + list(range(29,33)) \
-             + list(range(45,50)) \
-             + list(range(64,67)) \
-             + [75,76] \
-             + list(range(81,85)):
-        num_to_mundane[i] = ("art_25gp", 4, 2)
-    for i in list(range(23,29)) \
-             + list(range(41,45)) \
-             + list(range(60,64)) \
-             + list(range(92,95)) \
-             + [73,74,80,97,98,100]:
-        num_to_mundane[i] = ("art_250gp", 4, 2)
-
-    num_to_magic = {}
-    for i in list(range(29,45)):
-        num_to_magic[i] = ("magic_a", 6, 1)
-    for i in list(range(45,64)):
-        num_to_magic[i] = ("magic_b", 4, 1)
-    for i in list(range(64,75)):
-        num_to_magic[i] = ("magic_c", 4, 1)
-    for i in list(range(75,81)):
-        num_to_magic[i] = ("magic_d", 1, 1)
-    for i in list(range(81,95)):
-        num_to_magic[i] = ("magic_f", 4, 1)
-    for i in [95,96,97,98]:
-        num_to_magic[i] = ("magic_g", 4, 1)
-    for i in [99,100]:
-        num_to_magic[i] = ("magic_h", 1, 1)
-
     for roll_index in range(rolls):
         result.cp += roll_die(6, 2) * 100
         result.sp += roll_die(6, 2) * 1000
         result.gp += roll_die(6, 6) * 100
         result.pp += roll_die(6, 3) * 10
-
-        table_roll = roll_die(100, 1)
-
-        if table_roll > 4:
-            mundane_info = num_to_mundane[table_roll]
-            mundane_objects = get_mundanes(*mundane_info)
-            result.add_mundanes(mundane_objects)
-
-        if table_roll > 28:
-            magic_info = num_to_magic[table_roll]
-            magic_objects = get_magics(*magic_info)
-            result.add_magics(magic_objects)
+        roll_hoard_table(hoardtables.table_two, result)
 
 
 def roll_table_three(rolls, result):
     """'roll' on the hoard table for CR 11-16 and record the result"""
-    num_to_mundane = {}
-    for i in [11,12,24,25,26] \
-             + list(range(41,46)) \
-             + list(range(59,63)) \
-             + [71,72,79,80,89,90,97,98]:
-        num_to_mundane[i] = ("gem_500gp", 6, 3)
-    for i in list(range(13,16)) \
-             + list(range(27,30)) \
-             + list(range(46,51)) \
-             + list(range(63,67)) \
-             + [73,74,81,82,91,92,99,100]:
-        num_to_mundane[i] = ("gem_1000gp", 6, 3)
-    for i in list(range(4,7)) \
-             + list(range(16,20)) \
-             + list(range(30,36)) \
-             + list(range(51,55)) \
-             + [67,68,75,76] \
-             + list(range(83,86)) \
-             + [93,94]:
-        num_to_mundane[i] = ("art_250gp", 4, 2)
-    for i in list(range(7,11)) \
-             + list(range(20,24)) \
-             + list(range(36,41)) \
-             + list(range(55,59)) \
-             + [69,70,77,78,86,87,88,95,96]:
-        num_to_mundane[i] = ("art_750gp", 4, 2)
-
-    num_to_magic = {}
-    for i in list(range(16,30)):
-        num_to_magic[i] = [("magic_a", 4, 1), ("magic_b", 6, 1)]
-    for i in list(range(30,51)):
-        num_to_magic[i] = [("magic_c", 6, 1)]
-    for i in list(range(51,67)):
-        num_to_magic[i] = [("magic_d", 4, 1)]
-    for i in list(range(67,75)):
-        num_to_magic[i] = [("magic_e", 1, 1)]
-    for i in list(range(75,83)):
-        num_to_magic[i] = [("magic_f", 1, 1), ("magic_g", 4, 1)]
-    for i in list(range(83,93)):
-        num_to_magic[i] = [("magic_h", 4, 1)]
-    for i in list(range(93,101)):
-        num_to_magic[i] = [("magic_i", 1, 1)]
-
     for roll_index in range(rolls):
         result.gp += roll_die(6, 4) * 1000
         result.pp += roll_die(6, 5) * 100
-
-        table_roll = roll_die(100, 1)
-
-        if table_roll > 3:
-            mundane_info = num_to_mundane[table_roll]
-            mundane_objects = get_mundanes(*mundane_info)
-            result.add_mundanes(mundane_objects)
-
-        if table_roll > 15:
-            magic_info = num_to_magic[table_roll]
-            for mi in magic_info:
-                magic_objects = get_magics(*mi)
-                result.add_magics(magic_objects)
+        roll_hoard_table(hoardtables.table_three, result)
 
 
 def roll_table_four(rolls, result):
     """'roll' on the hoard table for CR 17+ and record the result"""
-    num_to_mundane = {}
-    for i in list(range(3,6)) \
-             + list(range(15,23)) \
-             + list(range(47,53)) \
-             + [69,73,74,81,82,83,84,85]:
-        num_to_mundane[i] = ("gem_1000gp", 6, 3)
-    for i in list(range(12,15)) \
-             + list(range(39,47)) \
-             + list(range(64,69)) \
-             + [72,79,80,96,97,98,99,100]:
-        num_to_mundane[i] = ("gem_5000gp", 6, 3)
-    for i in list(range(6,9)) \
-             + list(range(23,31)) \
-             + list(range(53,59)) \
-             + [70,75,76,86,87,88,89,90]:
-        num_to_mundane[i] = ("art_2500gp", 4, 2)
-    for i in list(range(9,12)) \
-             + list(range(31,39)) \
-             + list(range(59,64)) \
-             + [71,77,78,91,92,93,94,95]:
-        num_to_mundane[i] = ("art_7500gp", 4, 2)
-
-    num_to_magic = {}
-    for i in list(range(3,15)):
-        num_to_magic[i] = [("magic_c", 8, 1)]
-    for i in list(range(15,47)):
-        num_to_magic[i] = [("magic_d", 6, 1)]
-    for i in list(range(47,69)):
-        num_to_magic[i] = [("magic_e", 4, 1)]
-    for i in list(range(69,73)):
-        num_to_magic[i] = [("magic_g", 4, 1)]
-    for i in list(range(73,81)):
-        num_to_magic[i] = [("magic_h", 4, 1)]
-    for i in list(range(81,101)):
-        num_to_magic[i] = [("magic_i", 4, 1)]
-
     for roll_index in range(rolls):
         result.gp += roll_die(6, 12) * 1000
         result.pp += roll_die(6, 6) * 1000
-
-        table_roll = roll_die(100, 1)
-
-        if table_roll > 2:
-            mundane_info = num_to_mundane[table_roll]
-            mundane_objects = get_mundanes(*mundane_info)
-            result.add_mundanes(mundane_objects)
-
-        if table_roll > 2:
-            magic_info = num_to_magic[table_roll]
-            for mi in magic_info:
-                magic_objects = get_magics(*mi)
-                result.add_magics(magic_objects)
+        roll_hoard_table(hoardtables.table_two, result)
 
 
 def main(arglist):
