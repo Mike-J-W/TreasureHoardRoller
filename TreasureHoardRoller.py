@@ -8,8 +8,9 @@ import mundaneitems as muni
 import magicmappings as magmap
 import mundanemappings as munmap
 
-cp_values = {**munmap.cp_values, **magmap.cp_values,
-             "cp": 1, "sp": 10, "gp": 100, "pp": 1000}
+cp_values = {"cp": 1, "sp": 10, "gp": 100, "pp": 1000}
+cp_values.update(munmap.cp_values)
+cp_values.update(magmap.cp_values)
 
 
 class TreasureHoard:
@@ -69,7 +70,7 @@ class TreasureHoard:
             rarity = magmap.magic_qualities[obj][0]
             self.increment_counts(self.magics[rarity], [obj])
 
-    def print(self):
+    def print_result(self):
         """print all treasure to formatted style"""
         print("COINS: ")
         print("  cp: {}".format(self.cp))
@@ -225,7 +226,7 @@ def main(arglist):
     if args.table_four is not None:
         roll_table_four(args.table_four, hoard)
 
-    hoard.print()
+    hoard.print_result()
 
 
 if __name__ == "__main__":
