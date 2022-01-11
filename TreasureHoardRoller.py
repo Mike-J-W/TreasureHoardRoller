@@ -75,13 +75,15 @@ class TreasureHoard:
         print("  pp: {}".format(self.pp))
         print()
         print("MUNDANE ITEMS: ")
-        for category, treasure_counts in self.mundane_treasures_by_category.items():
+        for category in mundane_mappings.categories:
+            treasure_counts = self.mundane_treasures_by_category[category]
             if treasure_counts:
                 print("  {}:".format(category))
                 self.print_counts(treasure_counts)
         print()
         print("MAGIC ITEMS: ")
-        for rarity, treasure_counts in self.magic_treasures_by_rarity.items():
+        for rarity in magic_mappings.magic_rarities:
+            treasure_counts = self.magic_treasures_by_rarity[rarity]
             if treasure_counts:
                 print("  {}:".format(rarity))
                 self.print_counts(treasure_counts)
