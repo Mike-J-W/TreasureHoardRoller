@@ -175,7 +175,7 @@ def roll_table_four(rolls, hoard):
     for roll_counter in range(rolls):
         hoard.gp += roll_die(6, 12) * 1000
         hoard.pp += roll_die(6, 6) * 1000
-        roll_on_hoard_table(hoard_tables.table_two, hoard)
+        roll_on_hoard_table(hoard_tables.table_four, hoard)
 
 
 def main(arglist):
