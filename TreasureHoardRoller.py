@@ -2,11 +2,11 @@ import sys
 import random
 from argparse import ArgumentParser
 
-import hoardtables
-import magicitems as magi
-import mundaneitems as muni
-import magicmappings as magmap
-import mundanemappings as munmap
+import hoard_tables
+import magic_items as magi
+import mundane_items as muni
+import magic_mappings as magmap
+import mundane_mappings as munmap
 
 cp_values = {"cp": 1, "sp": 10, "gp": 100, "pp": 1000}
 cp_values.update(munmap.cp_values)
