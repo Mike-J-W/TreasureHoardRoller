@@ -20,27 +20,26 @@ class TreasureHoard:
     sp = 0
     gp = 0
     pp = 0
-    mundanes = dict(zip(mundane_mappings.categories,
-                        [{} for i in range(len(mundane_mappings.categories))]))
-    magics = dict(zip(magic_mappings.magic_rarities,
-                      [{} for i in range(len(magic_mappings.magic_rarities))]))
+    mundane_treasures_by_category = dict(zip(mundane_mappings.categories,
+                                        [{} for i in range(len(mundane_mappings.categories))]))
+    magic_treasures_by_rarity = dict(zip(magic_mappings.magic_rarities,
+                                    [{} for i in range(len(magic_mappings.magic_rarities))]))
 
-    def increment_counts(self, count_dict, objects):
+    def increment_counts(self, treasure_counts, treasures):
         """increase stored counts of given items"""
-        for obj in objects:
-            if obj in count_dict:
-                count_dict[obj] +=1
+        for treasure in treasures:
+            if treasure in treasure_counts:
+                treasure_counts[treasure] +=1
             else:
-                count_dict[obj] = 1
+                treasure_counts[treasure] = 1
 
-    def print_counts(self, count_dict):
-        """print list of item counts and items"""
-        if count_dict:
-            max_count = max(count_dict.values())
-            width = len(str(max_count))
-            for obj in sorted(count_dict):
-                print("    {0:{width}} {1}".format(count_dict[obj], obj,
-                                                   width=width))
+    def print_counts(self, treasure_counts):
+        """print list of item counts and items, with even spacing"""
+        if treasure_counts:
+            max_count = max(treasure_counts.values())
+            characters_in_max_count = len(str(max_count))
+            for treasure in sorted(treasure_counts):
+                print("    {0:{width}} {1}".format(treasure_counts[treasure], treasure, width=characters_in_max_count))
         else:
             print()
 
@@ -50,25 +49,22 @@ class TreasureHoard:
         total += cp_values["sp"] * self.sp
         total += cp_values["gp"] * self.gp
         total += cp_values["pp"] * self.pp
-        for obj_class in [self.mundanes, self.magics]:
-            for obj_type, count_dict in obj_class.items():
-                total += cp_values[obj_type] * sum(count_dict.values())
+        for treasure_grouping in [self.mundane_treasures_by_category, self.magic_treasures_by_rarity]:
+            for treasure_type, treasure_counts in treasure_grouping.items():
+                total += cp_values[treasure_type] * sum(treasure_counts.values())
         return total
 
-    def add_mundanes(self, object_info):
+    def add_mundane_treasures(self, treasures):
         """record new mundane items in treasure group"""
-        table_name = object_info[0]
-        object_list = object_info[1]
-        for obj in object_list:
-            category = mundane_mappings.qualities[obj][0]
-            self.increment_counts(self.mundanes[category], [obj])
+        for treasure in treasures:
+            category = mundane_mappings.qualities[treasure][0]
+            self.increment_counts(self.mundane_treasures_by_category[category], [treasure])
 
-    def add_magics(self, object_info):
+    def add_magic_treasures(self, treasures):
         """record new magic items in treasure group"""
-        object_list = object_info[1]
-        for obj in object_list:
-            rarity = magic_mappings.magic_qualities[obj][0]
-            self.increment_counts(self.magics[rarity], [obj])
+        for treasure in treasures:
+            rarity = magic_mappings.magic_qualities[treasure][0]
+            self.increment_counts(self.magic_treasures_by_rarity[rarity], [treasure])
 
     def print_result(self):
         """print all treasure to formatted style"""
@@ -79,16 +75,16 @@ class TreasureHoard:
         print("  pp: {}".format(self.pp))
         print()
         print("MUNDANE ITEMS: ")
-        for category, count_dict in self.mundanes.items():
-            if count_dict:
+        for category, treasure_counts in self.mundane_treasures_by_category.items():
+            if treasure_counts:
                 print("  {}:".format(category))
-                self.print_counts(count_dict)
+                self.print_counts(treasure_counts)
         print()
         print("MAGIC ITEMS: ")
-        for rarity, count_dict in self.magics.items():
-            if count_dict:
+        for rarity, treasure_counts in self.magic_treasures_by_rarity.items():
+            if treasure_counts:
                 print("  {}:".format(rarity))
-                self.print_counts(count_dict)
+                self.print_counts(treasure_counts)
         print()
         print("TOTAL VALUE:")
         print("  gp: {}".format(round(self.get_total_cp_value() / 100)))
@@ -106,7 +102,7 @@ def roll_die(max, rolls):
     return total
 
 
-def roll_table(table):
+def roll_on_table(table):
     """randomly choose an item from the given table"""
     if len(table) == 1:
         return table[0]
@@ -114,71 +110,70 @@ def roll_table(table):
     return table[roll_die(len(table), 1)]
 
 
-def get_mundanes(table_name, die_type, die_count):
-    """'roll' on the given table of mundane items"""
-    objects = []
-    roll_count = roll_die(die_type, die_count)
-    for r in range(roll_count):
-        mundane_result = roll_table(mundane_tables.tables[table_name])
-        objects += [roll_table(mundane_result)]
-    return (table_name, objects)
+def get_treasures(treasure_type, table_name, die_type, die_count):
+    """'roll' on the given table of treasure items"""
+    treasures = []
+    table_rolls = roll_die(die_type, die_count)
+    for roll_counter in range(table_rolls):
+        table_result = []
+        if treasure_type == "mundane":
+            table_result = roll_on_table(mundane_tables.tables[table_name])
+        elif treasure_type == "magic":
+            table_result = roll_on_table(magic_tables.tables[table_name])
+        else:
+            print("ERROR: unrecognized treasure type")
+            exit()
+        # Some table rows have additional possibilities, 
+        # so all rows are returned as a list to be rolled on
+        treasures += [roll_on_table(table_result)]
+    return treasures
 
 
-def get_magics(table_name, die_type, die_count):
-    """'roll' on the given table of magic items"""
-    objects = []
-    roll_count = roll_die(die_type, die_count)
-    for r in range(roll_count):
-        magic_result = roll_table(magic_tables.tables[table_name])
-        objects += [roll_table(magic_result)]
-    return (table_name, objects)
+def roll_on_hoard_table(table_name, hoard):
+    hoard_table_row = roll_on_table(table_name)
+    mundane_instructions = hoard_table_row[0]
+    for instruction in mundane_instructions:
+        mundane_treasures = get_treasures("mundane", *instruction)
+        hoard.add_mundane_treasures(mundane_treasures)
+    magic_instructions = hoard_table_row[1]
+    for instruction in magic_instructions:
+        magic_treasures = get_treasures("magic", *instruction)
+        hoard.add_magic_treasures(magic_treasures)
 
 
-def roll_hoard_table(table_name, result):
-    hoard_table_row = roll_table(table_name)
-    mundane_info = hoard_table_row[0]
-    for mi in mundane_info:
-        mundane_objects = get_mundanes(*mi)
-        result.add_mundanes(mundane_objects)
-    magic_info = hoard_table_row[1]
-    for mi in magic_info:
-        magic_objects = get_magics(*mi)
-        result.add_magics(magic_objects)
-
-
-def roll_table_one(rolls, result):
+def roll_table_one(rolls, hoard):
     """'roll' on the hoard table for CR 0-4 and record the result"""
-    for roll_index in range(rolls):
-        result.cp += roll_die(6, 6) * 100
-        result.sp += roll_die(6, 3) * 100
-        result.gp += roll_die(6, 2) * 10
-        roll_hoard_table(hoardtables.table_one, result)
+    for roll_counter in range(rolls):
+        hoard.cp += roll_die(6, 6) * 100
+        hoard.sp += roll_die(6, 3) * 100
+        hoard.gp += roll_die(6, 2) * 10
+        roll_on_hoard_table(hoard_tables.table_one, hoard)
 
 
-def roll_table_two(rolls, result):
+def roll_table_two(rolls, hoard):
     """'roll' on the hoard table for CR 5-10 and record the result"""
-    for roll_index in range(rolls):
-        result.cp += roll_die(6, 2) * 100
-        result.sp += roll_die(6, 2) * 1000
-        result.gp += roll_die(6, 6) * 100
-        result.pp += roll_die(6, 3) * 10
-        roll_hoard_table(hoardtables.table_two, result)
+    for roll_counter in range(rolls):
+        hoard.cp += roll_die(6, 2) * 100
+        hoard.sp += roll_die(6, 2) * 1000
+        hoard.gp += roll_die(6, 6) * 100
+        hoard.pp += roll_die(6, 3) * 10
+        roll_on_hoard_table(hoard_tables.table_two, hoard)
 
 
-def roll_table_three(rolls, result):
+def roll_table_three(rolls, hoard):
     """'roll' on the hoard table for CR 11-16 and record the result"""
-    for roll_index in range(rolls):
-        result.gp += roll_die(6, 4) * 1000
-        result.pp += roll_die(6, 5) * 100
-        roll_hoard_table(hoardtables.table_three, result)
+    for roll_counter in range(rolls):
+        hoard.gp += roll_die(6, 4) * 1000
+        hoard.pp += roll_die(6, 5) * 100
+        roll_on_hoard_table(hoard_tables.table_three, hoard)
 
 
-def roll_table_four(rolls, result):
+def roll_table_four(rolls, hoard):
     """'roll' on the hoard table for CR 17+ and record the result"""
-    for roll_index in range(rolls):
-        result.gp += roll_die(6, 12) * 1000
-        result.pp += roll_die(6, 6) * 1000
-        roll_hoard_table(hoardtables.table_two, result)
+    for roll_counter in range(rolls):
+        hoard.gp += roll_die(6, 12) * 1000
+        hoard.pp += roll_die(6, 6) * 1000
+        roll_on_hoard_table(hoard_tables.table_two, hoard)
 
 
 def main(arglist):
