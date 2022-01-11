@@ -3,14 +3,14 @@ import random
 from argparse import ArgumentParser
 
 import hoard_tables
-import magic_items as magi
-import mundane_items as muni
-import magic_mappings as magmap
-import mundane_mappings as munmap
+import magic_tables
+import mundane_tables
+import magic_mappings
+import mundane_mappings
 
 cp_values = {"cp": 1, "sp": 10, "gp": 100, "pp": 1000}
-cp_values.update(munmap.cp_values)
-cp_values.update(magmap.cp_values)
+cp_values.update(mundane_mappings.cp_values)
+cp_values.update(magic_mappings.cp_values)
 
 
 class TreasureHoard:
@@ -20,10 +20,10 @@ class TreasureHoard:
     sp = 0
     gp = 0
     pp = 0
-    mundanes = dict(zip(munmap.categories,
-                        [{} for i in range(len(munmap.categories))]))
-    magics = dict(zip(magmap.magic_rarities,
-                      [{} for i in range(len(magmap.magic_rarities))]))
+    mundanes = dict(zip(mundane_mappings.categories,
+                        [{} for i in range(len(mundane_mappings.categories))]))
+    magics = dict(zip(magic_mappings.magic_rarities,
+                      [{} for i in range(len(magic_mappings.magic_rarities))]))
 
     def increment_counts(self, count_dict, objects):
         """increase stored counts of given items"""
@@ -60,14 +60,14 @@ class TreasureHoard:
         table_name = object_info[0]
         object_list = object_info[1]
         for obj in object_list:
-            category = munmap.qualities[obj][0]
+            category = mundane_mappings.qualities[obj][0]
             self.increment_counts(self.mundanes[category], [obj])
 
     def add_magics(self, object_info):
         """record new magic items in treasure group"""
         object_list = object_info[1]
         for obj in object_list:
-            rarity = magmap.magic_qualities[obj][0]
+            rarity = magic_mappings.magic_qualities[obj][0]
             self.increment_counts(self.magics[rarity], [obj])
 
     def print_result(self):
@@ -119,7 +119,7 @@ def get_mundanes(table_name, die_type, die_count):
     objects = []
     roll_count = roll_die(die_type, die_count)
     for r in range(roll_count):
-        mundane_result = roll_table(muni.tables[table_name])
+        mundane_result = roll_table(mundane_tables.tables[table_name])
         objects += [roll_table(mundane_result)]
     return (table_name, objects)
 
@@ -129,7 +129,7 @@ def get_magics(table_name, die_type, die_count):
     objects = []
     roll_count = roll_die(die_type, die_count)
     for r in range(roll_count):
-        magic_result = roll_table(magi.tables[table_name])
+        magic_result = roll_table(magic_tables.tables[table_name])
         objects += [roll_table(magic_result)]
     return (table_name, objects)
 
@@ -184,8 +184,8 @@ def roll_table_four(rolls, result):
 def main(arglist):
     """take arguments, 'roll' on the tables, print the full result"""
     values_list = []
-    [values_list.extend([k,v//100]) for k,v in magmap.cp_values.items()]
-    values_str = " {}: {}gp,".join([""]+["" for e in magmap.cp_values])[:-1]
+    [values_list.extend([k,v//100]) for k,v in magic_mappings.cp_values.items()]
+    values_str = " {}: {}gp,".join([""]+["" for e in magic_mappings.cp_values])[:-1]
     values_str = values_str.format(*values_list)
     parser = ArgumentParser(description="Roll on the 5e Treasure Hoard " \
                                         "tables. Any combination of rolls" \
