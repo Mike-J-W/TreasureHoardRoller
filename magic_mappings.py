@@ -74,6 +74,7 @@ magic_qualities = {
     "Armor of Resistance (Chain Mail)": ["rare"],
     "Armor of Resistance (Chain Shirt)": ["rare"],
     "Armor of Resistance (Half Plate)": ["rare"],
+    "Armor of Resistance (Hide)": ["rare"],
     "Armor of Resistance (Leather)": ["rare"],
     "Armor of Resistance (Plate)": ["rare"],
     "Armor of Resistance (Scale Mail)": ["rare"],
